@@ -34,8 +34,16 @@
         header.scrolled { padding: 6px 40px; background: rgba(10, 10, 15, 0.97); }
         .header-left { display: flex; align-items: center; gap: 15px; }
         .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-magnifier { width: 50px; height: 50px; animation: logoFloat 3s ease-in-out infinite; }
+        
+        /* Логотип-лупа: встроенный SVG, без внешних файлов */
+        .logo-magnifier {
+            width: 50px;
+            height: 50px;
+            animation: logoFloat 3s ease-in-out infinite;
+            display: block;
+        }
         @keyframes logoFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-3px) rotate(5deg); } }
+        
         .site-title {
             font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900;
             background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
@@ -139,7 +147,6 @@
             border-radius: 20px; color: var(--gold); font-weight: 600;
         }
 
-        /* Контейнер для вашего MP4 видео */
         .video-wrapper {
             width: 100%;
             aspect-ratio: 16/9;
@@ -239,16 +246,8 @@
         .subject-card h4 { font-size: 16px; font-weight: 600; line-height: 1.4; margin-bottom: 10px; }
         .subject-card .subject-icon { font-size: 24px; margin-bottom: 10px; }
 
-        /* ===== GALLERY WITH PHOTOS ===== */
+        /* ===== GALLERY ===== */
         .gallery-section { padding: 80px 40px; background: var(--dark2); }
-        .section-header { text-align: center; margin-bottom: 60px; }
-        .section-header h2 { font-family: 'Orbitron', sans-serif; font-size: clamp(28px, 4vw, 42px); font-weight: 700; margin-bottom: 15px; }
-        .section-header h2 .gold-text {
-            background: linear-gradient(135deg, var(--gold-light), var(--gold));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .section-header p { color: rgba(240, 240, 240, 0.6); font-size: 16px; }
-
         .gallery-grid {
             max-width: 1100px; margin: 0 auto;
             display: grid;
@@ -277,7 +276,7 @@
             aspect-ratio: 21/9;
         }
 
-        .gallery-item img, .gallery-item svg {
+        .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -291,7 +290,7 @@
             box-shadow: 0 20px 50px rgba(212, 168, 67, 0.2), 0 0 30px rgba(212, 168, 67, 0.08);
         }
 
-        .gallery-item:hover img, .gallery-item:hover svg {
+        .gallery-item:hover img {
             transform: scale(1.06);
         }
 
@@ -393,7 +392,7 @@
         footer { padding: 60px 40px 30px; background: var(--dark); border-top: 1px solid rgba(212, 168, 67, 0.1); }
         .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
         .footer-brand .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .footer-brand .footer-logo svg { width: 40px; height: 40px; }
+        .footer-brand .footer-logo .logo-magnifier { width: 40px; height: 40px; }
         .footer-brand .footer-logo span {
             font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 700;
             background: linear-gradient(135deg, var(--gold-light), var(--gold));
@@ -441,25 +440,100 @@
     <header id="header">
         <div class="header-left">
             <a href="#" class="logo-container">
-                <svg class="logo-magnifier" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- ВСТРОЕННЫЙ SVG-ЛОГОТИП (лупа как на картинке) -->
+                <svg class="logo-magnifier" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#F0D078"/>
-                            <stop offset="50%" style="stop-color:#D4A843"/>
-                            <stop offset="100%" style="stop-color:#B8860B"/>
+                        <!-- Фон -->
+                        <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#f5f0ec"/>
+                            <stop offset="100%" stop-color="#e8e0d8"/>
+                        </radialGradient>
+                        <!-- Золотой ободок -->
+                        <linearGradient id="goldRim" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#f5d97a"/>
+                            <stop offset="25%" stop-color="#d4a843"/>
+                            <stop offset="50%" stop-color="#f5d97a"/>
+                            <stop offset="75%" stop-color="#b8860b"/>
+                            <stop offset="100%" stop-color="#8b6914"/>
                         </linearGradient>
-                        <linearGradient id="lensGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:rgba(255,255,255,0.3)"/>
-                            <stop offset="100%" style="stop-color:rgba(255,255,255,0.05)"/>
+                        <!-- Внутренний золотой ободок -->
+                        <linearGradient id="goldInner" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#b8860b"/>
+                            <stop offset="50%" stop-color="#d4a843"/>
+                            <stop offset="100%" stop-color="#8b6914"/>
                         </linearGradient>
+                        <!-- Стекло линзы -->
+                        <radialGradient id="lensGrad" cx="40%" cy="40%" r="60%">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                            <stop offset="40%" stop-color="#dce8f0" stop-opacity="0.85"/>
+                            <stop offset="80%" stop-color="#a8c0d4" stop-opacity="0.7"/>
+                            <stop offset="100%" stop-color="#6a8aa8" stop-opacity="0.5"/>
+                        </radialGradient>
+                        <!-- Блик на стекле -->
+                        <radialGradient id="glareGrad" cx="30%" cy="30%" r="40%">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+                            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                        </radialGradient>
+                        <!-- Золотой соединитель -->
+                        <linearGradient id="goldConnector" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#f5d97a"/>
+                            <stop offset="50%" stop-color="#d4a843"/>
+                            <stop offset="100%" stop-color="#8b6914"/>
+                        </linearGradient>
+                        <!-- Чёрная ручка -->
+                        <linearGradient id="handleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#3a3a3a"/>
+                            <stop offset="50%" stop-color="#0a0a0a"/>
+                            <stop offset="100%" stop-color="#000000"/>
+                        </linearGradient>
+                        <!-- Тень под лупой -->
+                        <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#000000" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+                        </radialGradient>
                     </defs>
-                    <rect x="62" y="62" width="14" height="35" rx="5" fill="url(#goldGrad)" transform="rotate(45 69 79)"/>
-                    <rect x="64" y="64" width="10" height="30" rx="4" fill="#B8860B" transform="rotate(45 69 79)" opacity="0.5"/>
-                    <circle cx="42" cy="42" r="32" fill="none" stroke="url(#goldGrad)" stroke-width="8"/>
-                    <circle cx="42" cy="42" r="28" fill="none" stroke="#8B6914" stroke-width="2" opacity="0.5"/>
-                    <circle cx="42" cy="42" r="26" fill="url(#lensGrad)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                    <ellipse cx="32" cy="32" rx="10" ry="6" fill="rgba(255,255,255,0.2)" transform="rotate(-30 32 32)"/>
-                    <text x="42" y="48" text-anchor="middle" font-family="Orbitron, sans-serif" font-size="14" font-weight="900" fill="url(#goldGrad)" opacity="0.8">3D</text>
+
+                    <!-- Фон -->
+                    <rect width="200" height="200" fill="url(#bgGrad)"/>
+
+                    <!-- Тень под лупой -->
+                    <ellipse cx="85" cy="130" rx="65" ry="18" fill="url(#shadowGrad)"/>
+
+                    <!-- Ручка (чёрная) -->
+                    <path d="M 145 145 L 195 195 L 200 190 L 150 140 Z" fill="url(#handleGrad)"/>
+                    <!-- Блик на ручке -->
+                    <path d="M 148 148 L 192 192 L 194 190 L 150 146 Z" fill="#ffffff" opacity="0.15"/>
+
+                    <!-- Золотой соединитель -->
+                    <rect x="130" y="125" width="25" height="25" rx="3" fill="url(#goldConnector)" transform="rotate(45 142 137)"/>
+                    <!-- Кольца на соединителе -->
+                    <ellipse cx="142" cy="137" rx="14" ry="4" fill="none" stroke="#8b6914" stroke-width="1.5" transform="rotate(45 142 137)" opacity="0.6"/>
+                    <ellipse cx="142" cy="137" rx="14" ry="4" fill="none" stroke="#f5d97a" stroke-width="1" transform="rotate(45 142 137)" opacity="0.8"/>
+
+                    <!-- Внешний золотой ободок -->
+                    <circle cx="90" cy="85" r="60" fill="url(#goldRim)"/>
+                    <!-- Блик на золотом ободке -->
+                    <path d="M 35 70 Q 50 35 90 30" stroke="#f5f0d0" stroke-width="3" fill="none" opacity="0.7" stroke-linecap="round"/>
+                    <path d="M 145 100 Q 150 120 130 140" stroke="#5a4410" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round"/>
+
+                    <!-- Внутренний золотой ободок (меньше) -->
+                    <circle cx="90" cy="85" r="54" fill="url(#goldInner)"/>
+                    <!-- Блик на внутреннем ободке -->
+                    <path d="M 40 75 Q 55 42 90 37" stroke="#f5f0d0" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round"/>
+
+                    <!-- Чёрная внутренняя рамка -->
+                    <circle cx="90" cy="85" r="49" fill="#1a1a1a"/>
+
+                    <!-- Стекло линзы -->
+                    <circle cx="90" cy="85" r="46" fill="url(#lensGrad)"/>
+
+                    <!-- Блик на стекле (большой) -->
+                    <ellipse cx="70" cy="65" rx="22" ry="14" fill="url(#glareGrad)" transform="rotate(-30 70 65)"/>
+                    <!-- Маленький блик -->
+                    <ellipse cx="110" cy="100" rx="8" ry="5" fill="#ffffff" opacity="0.4" transform="rotate(-30 110 100)"/>
+
+                    <!-- Тонкая обводка стекла -->
+                    <circle cx="90" cy="85" r="46" fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.5"/>
                 </svg>
                 <span class="site-title">3DЛУП</span>
             </a>
@@ -547,7 +621,7 @@
         </div>
     </section>
 
-    <!-- 3D ANIMATION (YOUR VIDEO) -->
+    <!-- 3D ANIMATION -->
     <section class="animation-section" id="animation">
         <div class="section-header reveal">
             <h2><span class="gold-text">3D</span> Анимация</h2>
@@ -558,15 +632,12 @@
                 <div class="title"><div class="dot"></div>3D Magnifier — Ladybug Scene</div>
                 <div class="badge">ORIGINAL VIDEO</div>
             </div>
-            
-            <!-- ВСТАВКА ВАШЕГО ВИДЕО БЕЗ ИЗМЕНЕНИЙ -->
             <div class="video-wrapper">
                 <video id="mainVideo" autoplay loop muted playsinline>
                     <source src="animation.mp4" type="video/mp4">
                     Ваш браузер не поддерживает воспроизведение видео.
                 </video>
             </div>
-
             <div class="animation-card-footer">
                 <div class="animation-controls">
                     <button class="anim-btn play" id="playBtn" title="Play/Pause">⏸</button>
@@ -641,129 +712,35 @@
             <h2>Фотографии по специальности</h2>
             <p>Учебный процесс и проекты студентов</p>
         </div>
-
         <div class="gallery-grid">
-            <!-- Фото 1: Программист за двумя мониторами -->
             <div class="gallery-item reveal">
-                <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="800" height="400" fill="#1a1a2e"/>
-                    <rect x="50" y="150" width="300" height="200" rx="10" fill="#2a2a4a" stroke="#444" stroke-width="2"/>
-                    <rect x="60" y="160" width="280" height="180" fill="#0d1117"/>
-                    <text x="80" y="190" font-family="monospace" font-size="10" fill="#7ee787">const app = express();</text>
-                    <text x="80" y="210" font-family="monospace" font-size="10" fill="#79c0ff">app.listen(3000);</text>
-                    <text x="80" y="230" font-family="monospace" font-size="10" fill="#d2a8ff">console.log("Server running");</text>
-                    <text x="80" y="250" font-family="monospace" font-size="10" fill="#ffa657">let users = [];</text>
-                    <text x="80" y="270" font-family="monospace" font-size="10" fill="#ff7b72">function init() { ... }</text>
-                    <rect x="450" y="150" width="300" height="200" rx="10" fill="#2a2a4a" stroke="#444" stroke-width="2"/>
-                    <rect x="460" y="160" width="280" height="180" fill="#0d1117"/>
-                    <text x="480" y="190" font-family="monospace" font-size="10" fill="#7ee787">&lt;div class="app"&gt;</text>
-                    <text x="480" y="210" font-family="monospace" font-size="10" fill="#79c0ff">  &lt;Header /&gt;</text>
-                    <text x="480" y="230" font-family="monospace" font-size="10" fill="#d2a8ff">  &lt;MainContent /&gt;</text>
-                    <text x="480" y="250" font-family="monospace" font-size="10" fill="#ffa657">  &lt;Footer /&gt;</text>
-                    <text x="480" y="270" font-family="monospace" font-size="10" fill="#ff7b72">&lt;/div&gt;</text>
-                    <circle cx="400" cy="80" r="30" fill="#f5d5c0"/>
-                    <rect x="385" y="110" width="30" height="40" fill="#2a2a4a" rx="5"/>
-                    <circle cx="390" cy="75" r="3" fill="#1a1a1a"/>
-                    <circle cx="410" cy="75" r="3" fill="#1a1a1a"/>
-                    <rect x="395" y="85" width="10" height="3" fill="#1a1a1a"/>
-                    <rect x="370" y="60" width="60" height="15" fill="#1a1a1a" rx="7"/>
-                </svg>
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Программирование" loading="lazy">
                 <div class="gallery-overlay">
                     <h4>Программирование</h4>
                     <p>Разработка программного обеспечения</p>
                 </div>
             </div>
-
-            <!-- Фото 2: Веб-разработка -->
             <div class="gallery-item reveal">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="400" height="300" fill="#1a2a3e"/>
-                    <rect x="50" y="50" width="300" height="200" rx="10" fill="#0d1117" stroke="#444" stroke-width="2"/>
-                    <text x="70" y="80" font-family="monospace" font-size="10" fill="#7ee787">import React from 'react';</text>
-                    <text x="70" y="100" font-family="monospace" font-size="10" fill="#79c0ff">export default function App() {</text>
-                    <text x="90" y="120" font-family="monospace" font-size="10" fill="#d2a8ff">return &lt;div&gt;Hello World&lt;/div&gt;;</text>
-                    <text x="70" y="140" font-family="monospace" font-size="10" fill="#ffa657">}</text>
-                    <text x="70" y="170" font-family="monospace" font-size="10" fill="#ff7b72">// Vue.js Component</text>
-                    <text x="70" y="190" font-family="monospace" font-size="10" fill="#7ee787">&lt;template&gt;&lt;div&gt;Hi&lt;/div&gt;&lt;/template&gt;</text>
-                    <text x="70" y="210" font-family="monospace" font-size="10" fill="#79c0ff">&lt;script setup&gt;...&lt;/script&gt;</text>
-                    <circle cx="200" cy="30" r="15" fill="#61dafb"/>
-                    <polygon points="200,10 215,35 185,35" fill="#41b883"/>
-                    <polygon points="200,15 210,30 190,30" fill="#35495e"/>
-                    <polygon points="250,25 265,50 235,50" fill="#dd0031"/>
-                    <polygon points="250,30 260,45 240,45" fill="#c3002f"/>
-                </svg>
+                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Веб-разработка" loading="lazy">
                 <div class="gallery-overlay">
                     <h4>Веб-разработка</h4>
                     <p>React, Vue.js, Angular</p>
                 </div>
             </div>
-
-            <!-- Фото 3: Серверная / Базы данных -->
             <div class="gallery-item reveal">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="400" height="300" fill="#0a1628"/>
-                    <rect x="30" y="30" width="80" height="240" rx="5" fill="#1a2a4a" stroke="#2a4a7a" stroke-width="1"/>
-                    <rect x="40" y="40" width="60" height="15" fill="#0d1117"/>
-                    <rect x="40" y="60" width="60" height="15" fill="#0d1117"/>
-                    <rect x="40" y="80" width="60" height="15" fill="#0d1117"/>
-                    <circle cx="50" cy="47" r="3" fill="#28c840"/>
-                    <circle cx="50" cy="67" r="3" fill="#28c840"/>
-                    <circle cx="50" cy="87" r="3" fill="#febc2e"/>
-                    <rect x="130" y="30" width="80" height="240" rx="5" fill="#1a2a4a" stroke="#2a4a7a" stroke-width="1"/>
-                    <rect x="140" y="40" width="60" height="15" fill="#0d1117"/>
-                    <rect x="140" y="60" width="60" height="15" fill="#0d1117"/>
-                    <circle cx="150" cy="47" r="3" fill="#28c840"/>
-                    <circle cx="150" cy="67" r="3" fill="#28c840"/>
-                    <rect x="230" y="30" width="80" height="240" rx="5" fill="#1a2a4a" stroke="#2a4a7a" stroke-width="1"/>
-                    <rect x="240" y="40" width="60" height="15" fill="#0d1117"/>
-                    <circle cx="250" cy="47" r="3" fill="#28c840"/>
-                    <rect x="30" y="120" width="340" height="100" rx="10" fill="#0d1117" stroke="#444" stroke-width="1"/>
-                    <text x="50" y="145" font-family="monospace" font-size="11" fill="#79c0ff">SELECT * FROM users</text>
-                    <text x="50" y="165" font-family="monospace" font-size="11" fill="#ffa657">WHERE status = 'active';</text>
-                    <text x="50" y="190" font-family="monospace" font-size="10" fill="#8b949e">-- 128 rows returned</text>
-                    <circle cx="200" cy="250" r="20" fill="#f5d5c0"/>
-                    <rect x="188" y="270" width="24" height="30" fill="#1a2a4a" rx="4"/>
-                    <circle cx="194" cy="245" r="2" fill="#1a1a1a"/>
-                    <circle cx="206" cy="245" r="2" fill="#1a1a1a"/>
-                </svg>
+                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Базы данных и сети" loading="lazy">
                 <div class="gallery-overlay">
                     <h4>Базы данных и сети</h4>
                     <p>Администрирование серверов</p>
                 </div>
             </div>
-
-            <!-- Фото 4: Frontend разработка -->
             <div class="gallery-item reveal">
-                <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="400" height="300" fill="#1a1a2e"/>
-                    <rect x="30" y="30" width="340" height="180" rx="10" fill="#0d1117" stroke="#444" stroke-width="2"/>
-                    <rect x="40" y="40" width="320" height="30" fill="#161b22"/>
-                    <circle cx="55" cy="55" r="5" fill="#ff5f57"/>
-                    <circle cx="75" cy="55" r="5" fill="#febc2e"/>
-                    <circle cx="95" cy="55" r="5" fill="#28c840"/>
-                    <rect x="120" y="48" width="200" height="14" rx="7" fill="#21262d"/>
-                    <text x="130" y="58" font-family="sans-serif" font-size="9" fill="#8b949e">localhost:3000</text>
-                    <rect x="50" y="80" width="140" height="120" rx="5" fill="#1a2a4a"/>
-                    <rect x="60" y="90" width="120" height="60" fill="#2a3a6a"/>
-                    <text x="70" y="110" font-family="sans-serif" font-size="12" fill="#f0f0f0">My Website</text>
-                    <rect x="60" y="160" width="55" height="25" rx="4" fill="#D4A843"/>
-                    <text x="68" y="177" font-family="sans-serif" font-size="9" fill="#0a0a0f">Learn More</text>
-                    <rect x="210" y="80" width="140" height="120" rx="5" fill="#1a2a4a"/>
-                    <rect x="220" y="90" width="120" height="80" fill="#2a3a6a"/>
-                    <rect x="220" y="180" width="55" height="10" fill="#D4A843"/>
-                    <rect x="220" y="195" width="80" height="8" fill="#444"/>
-                    <circle cx="200" cy="250" r="18" fill="#f5d5c0"/>
-                    <rect x="190" y="268" width="20" height="25" fill="#2a2a4a" rx="4"/>
-                    <circle cx="195" cy="246" r="2" fill="#1a1a1a"/>
-                    <circle cx="205" cy="246" r="2" fill="#1a1a1a"/>
-                </svg>
+                <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Frontend разработка" loading="lazy">
                 <div class="gallery-overlay">
                     <h4>Frontend разработка</h4>
                     <p>Веб-дизайн и интерфейсы</p>
                 </div>
             </div>
-
-            <!-- Анимация кода (GIF-like) -->
             <div class="code-animation-card reveal">
                 <div class="code-window-header">
                     <div class="code-dot red"></div>
@@ -783,18 +760,67 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <div class="footer-logo">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- ВСТРОЕННЫЙ SVG-ЛОГОТИП В ФУТЕРЕ -->
+                    <svg class="logo-magnifier" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                            <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#F0D078"/>
-                                <stop offset="50%" style="stop-color:#D4A843"/>
-                                <stop offset="100%" style="stop-color:#B8860B"/>
+                            <radialGradient id="bgGrad2" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#f5f0ec"/>
+                                <stop offset="100%" stop-color="#e8e0d8"/>
+                            </radialGradient>
+                            <linearGradient id="goldRim2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f5d97a"/>
+                                <stop offset="25%" stop-color="#d4a843"/>
+                                <stop offset="50%" stop-color="#f5d97a"/>
+                                <stop offset="75%" stop-color="#b8860b"/>
+                                <stop offset="100%" stop-color="#8b6914"/>
                             </linearGradient>
+                            <linearGradient id="goldInner2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#b8860b"/>
+                                <stop offset="50%" stop-color="#d4a843"/>
+                                <stop offset="100%" stop-color="#8b6914"/>
+                            </linearGradient>
+                            <radialGradient id="lensGrad2" cx="40%" cy="40%" r="60%">
+                                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                                <stop offset="40%" stop-color="#dce8f0" stop-opacity="0.85"/>
+                                <stop offset="80%" stop-color="#a8c0d4" stop-opacity="0.7"/>
+                                <stop offset="100%" stop-color="#6a8aa8" stop-opacity="0.5"/>
+                            </radialGradient>
+                            <radialGradient id="glareGrad2" cx="30%" cy="30%" r="40%">
+                                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+                                <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                            </radialGradient>
+                            <linearGradient id="goldConnector2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#f5d97a"/>
+                                <stop offset="50%" stop-color="#d4a843"/>
+                                <stop offset="100%" stop-color="#8b6914"/>
+                            </linearGradient>
+                            <linearGradient id="handleGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#3a3a3a"/>
+                                <stop offset="50%" stop-color="#0a0a0a"/>
+                                <stop offset="100%" stop-color="#000000"/>
+                            </linearGradient>
+                            <radialGradient id="shadowGrad2" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#000000" stop-opacity="0.4"/>
+                                <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+                            </radialGradient>
                         </defs>
-                        <rect x="62" y="62" width="14" height="35" rx="5" fill="url(#goldGrad2)" transform="rotate(45 69 79)"/>
-                        <circle cx="42" cy="42" r="32" fill="none" stroke="url(#goldGrad2)" stroke-width="8"/>
-                        <circle cx="42" cy="42" r="26" fill="rgba(255,255,255,0.1)"/>
-                        <ellipse cx="32" cy="32" rx="10" ry="6" fill="rgba(255,255,255,0.2)" transform="rotate(-30 32 32)"/>
+                        <rect width="200" height="200" fill="url(#bgGrad2)"/>
+                        <ellipse cx="85" cy="130" rx="65" ry="18" fill="url(#shadowGrad2)"/>
+                        <path d="M 145 145 L 195 195 L 200 190 L 150 140 Z" fill="url(#handleGrad2)"/>
+                        <path d="M 148 148 L 192 192 L 194 190 L 150 146 Z" fill="#ffffff" opacity="0.15"/>
+                        <rect x="130" y="125" width="25" height="25" rx="3" fill="url(#goldConnector2)" transform="rotate(45 142 137)"/>
+                        <ellipse cx="142" cy="137" rx="14" ry="4" fill="none" stroke="#8b6914" stroke-width="1.5" transform="rotate(45 142 137)" opacity="0.6"/>
+                        <ellipse cx="142" cy="137" rx="14" ry="4" fill="none" stroke="#f5d97a" stroke-width="1" transform="rotate(45 142 137)" opacity="0.8"/>
+                        <circle cx="90" cy="85" r="60" fill="url(#goldRim2)"/>
+                        <path d="M 35 70 Q 50 35 90 30" stroke="#f5f0d0" stroke-width="3" fill="none" opacity="0.7" stroke-linecap="round"/>
+                        <path d="M 145 100 Q 150 120 130 140" stroke="#5a4410" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round"/>
+                        <circle cx="90" cy="85" r="54" fill="url(#goldInner2)"/>
+                        <path d="M 40 75 Q 55 42 90 37" stroke="#f5f0d0" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round"/>
+                        <circle cx="90" cy="85" r="49" fill="#1a1a1a"/>
+                        <circle cx="90" cy="85" r="46" fill="url(#lensGrad2)"/>
+                        <ellipse cx="70" cy="65" rx="22" ry="14" fill="url(#glareGrad2)" transform="rotate(-30 70 65)"/>
+                        <ellipse cx="110" cy="100" rx="8" ry="5" fill="#ffffff" opacity="0.4" transform="rotate(-30 110 100)"/>
+                        <circle cx="90" cy="85" r="46" fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.5"/>
                     </svg>
                     <span>3DЛУП</span>
                 </div>
@@ -881,7 +907,7 @@
             });
         });
 
-        // ===== CODE TYPING ANIMATION =====
+        // Code typing animation
         const codeLines = [
             { num: 1, html: '<span class="comment">&lt;!-- 3DЛУП Project by Коробков Г.Н. --&gt;</span>' },
             { num: 2, html: '<span class="tag">&lt;!DOCTYPE</span> <span class="attr">html</span><span class="tag">&gt;</span>' },
